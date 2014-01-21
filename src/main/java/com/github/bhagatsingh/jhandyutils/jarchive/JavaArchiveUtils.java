@@ -14,7 +14,6 @@ import java.util.zip.ZipInputStream;
  * Use:
  *  - extractZipFile(File zipfile, File ir) mthod for Zip
  *  - extractTarFile(File tarfile, File outdir) method for .tar.gz
- *  - extractTarFile(File tarfile, File outdir) method for tar
  *
  */
 public class JavaArchiveUtils {
@@ -194,7 +193,4 @@ public class JavaArchiveUtils {
 		int s = name.lastIndexOf(File.separatorChar);
 		return s == -1 ? null : name.substring(0, s);
 	}
-
-	
-
 }
