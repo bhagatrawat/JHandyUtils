@@ -128,7 +128,7 @@ public class JavaArchiveEntry {
     }
 
     /**
-     * Checks if the org.kamrazafar.jtar entry is a directory
+     * Checks if the JarchiveEntry is a directory
      *
      * @return
      */
