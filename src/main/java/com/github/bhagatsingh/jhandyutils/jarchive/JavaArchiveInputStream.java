@@ -1,20 +1,20 @@
 
-package com.github.bhagatsingh.jhandyutils;
+package com.github.bhagatsingh.jhandyutils.jarchive;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 
-public class TarInputStream extends FilterInputStream {
+public class JavaArchiveInputStream extends FilterInputStream {
 
     private static final int SKIP_BUFFER_SIZE = 2048;
-    private TarEntry currentEntry;
+    private JavaArchiveEntry currentEntry;
     private long currentFileSize;
     private long bytesRead;
     private boolean defaultSkip = false;
 
-    public TarInputStream(InputStream in) {
+    public JavaArchiveInputStream(InputStream in) {
         super(in);
         currentFileSize = 0;
         bytesRead = 0;
@@ -23,23 +23,6 @@ public class TarInputStream extends FilterInputStream {
     @Override
     public boolean markSupported() {
         return false;
-    }
-
-    /**
-     * Not supported
-     *
-     */
-    @Override
-    public synchronized void mark(int readlimit) {
-    }
-
-    /**
-     * Not supported
-     *
-     */
-    @Override
-    public synchronized void reset() throws IOException {
-        throw new IOException("mark/reset not supported");
     }
 
     /**
@@ -91,21 +74,21 @@ public class TarInputStream extends FilterInputStream {
     }
 
     /**
-     * Returns the next entry in the tar file
+     * Returns the next entry in the archive file
      *
-     * @return TarEntry
+     * @return JavaArchiveEntry
      * @throws java.io.IOException
      */
-    public TarEntry getNextEntry() throws IOException {
+    public JavaArchiveEntry getNextEntry() throws IOException {
         closeCurrentEntry();
 
-        byte[] header = new byte[TarConstants.HEADER_BLOCK];
-        byte[] theader = new byte[TarConstants.HEADER_BLOCK];
+        byte[] header = new byte[JavaArchiveConstants.HEADER_BLOCK];
+        byte[] theader = new byte[JavaArchiveConstants.HEADER_BLOCK];
         int tr = 0;
 
         // Read full header
-        while (tr < TarConstants.HEADER_BLOCK) {
-            int res = read(theader, 0, TarConstants.HEADER_BLOCK - tr);
+        while (tr < JavaArchiveConstants.HEADER_BLOCK) {
+            int res = read(theader, 0, JavaArchiveConstants.HEADER_BLOCK - tr);
 
             if (res < 0) {
                 break;
@@ -125,14 +108,14 @@ public class TarInputStream extends FilterInputStream {
         }
 
         if (!eof) {
-            currentEntry = new TarEntry(header);
+            currentEntry = new JavaArchiveEntry(header);
         }
 
         return currentEntry;
     }
 
     /**
-     * Closes the current tar entry
+     * Closes the current archive entry
      *
      * @throws java.io.IOException
      */
@@ -146,7 +129,7 @@ public class TarInputStream extends FilterInputStream {
 
                     if (res == 0 && currentEntry.getSize() - currentFileSize > 0) {
                         // I suspect file corruption
-                        throw new IOException("Possible tar file corruption");
+                        throw new IOException("Possible Archive file corruption");
                     }
 
                     bs += res;
@@ -160,18 +143,18 @@ public class TarInputStream extends FilterInputStream {
     }
 
     /**
-     * Skips the pad at the end of each tar entry file content
+     * Skips the pad at the end of each Archive Entry file content
      *
      * @throws java.io.IOException
      */
     protected void skipPad() throws IOException {
         if (bytesRead > 0) {
-            int extra = (int) (bytesRead % TarConstants.DATA_BLOCK);
+            int extra = (int) (bytesRead % JavaArchiveConstants.DATA_BLOCK);
 
             if (extra > 0) {
                 long bs = 0;
-                while (bs < TarConstants.DATA_BLOCK - extra) {
-                    long res = skip(TarConstants.DATA_BLOCK - extra - bs);
+                while (bs < JavaArchiveConstants.DATA_BLOCK - extra) {
+                    long res = skip(JavaArchiveConstants.DATA_BLOCK - extra - bs);
                     bs += res;
                 }
             }
