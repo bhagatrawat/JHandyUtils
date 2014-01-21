@@ -3,7 +3,10 @@ package com.github.bhagatsingh.jhandyutils.jarchive;
 import java.io.File;
 import java.util.Date;
 
-
+/**
+ * JavaArchiveEntry class represents an individual file or folder in archive
+ *
+ */
 public class JavaArchiveEntry {
     protected File file;
     protected JavaArchiveHeader header;
@@ -188,9 +191,9 @@ public class JavaArchiveEntry {
         offset = Octal.getLongOctalBytes(header.modTime, outbuf, offset, JavaArchiveConstants.MODTIMELEN);
 
         int csOffset = offset;
-        for (int c = 0; c < JavaArchiveConstants.CHKSUMLEN; ++c)
+        for (int c = 0; c < JavaArchiveConstants.CHKSUMLEN; ++c){
             outbuf[offset++] = (byte) ' ';
-
+        }
         outbuf[offset++] = header.linkFlag;
 
         offset = JavaArchiveHeader.getNameBytes(header.linkName, outbuf, offset, JavaArchiveConstants.NAMELEN);
@@ -201,9 +204,10 @@ public class JavaArchiveEntry {
         offset = Octal.getOctalBytes(header.devMinor, outbuf, offset, JavaArchiveConstants.USTAR_DEVLEN);
         offset = JavaArchiveHeader.getNameBytes(header.namePrefix, outbuf, offset, JavaArchiveConstants.USTAR_FILENAME_PREFIX);
 
-        for (; offset < outbuf.length;)
+        for (; offset < outbuf.length;){
             outbuf[offset++] = 0;
-
+        }
+        
         long checkSum = this.computeCheckSum(outbuf);
 
         Octal.getCheckSumOctalBytes(checkSum, outbuf, csOffset, JavaArchiveConstants.CHKSUMLEN);
@@ -260,6 +264,7 @@ public class JavaArchiveEntry {
 
         header.namePrefix = JavaArchiveHeader.parseName(bh, offset, JavaArchiveConstants.USTAR_FILENAME_PREFIX);
     }
+    
     
     public static class Octal {
 

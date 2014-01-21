@@ -8,7 +8,6 @@ import java.io.InputStream;
 
 public class JavaArchiveInputStream extends FilterInputStream {
 
-    private static final int SKIP_BUFFER_SIZE = 2048;
     private JavaArchiveEntry currentEntry;
     private long currentFileSize;
     private long bytesRead;
@@ -182,10 +181,11 @@ public class JavaArchiveInputStream extends FilterInputStream {
         }
 
         long left = n;
-        byte[] sBuff = new byte[SKIP_BUFFER_SIZE];
+        int skipSize = JavaArchiveConstants.BUFFER_SIZE;
+        byte[] sBuff = new byte[skipSize];
 
         while (left > 0) {
-            int res = read(sBuff, 0, (int) (left < SKIP_BUFFER_SIZE ? left : SKIP_BUFFER_SIZE));
+            int res = read(sBuff, 0, (int) (left < skipSize ? left : skipSize));
             if (res < 0) {
                 break;
             }

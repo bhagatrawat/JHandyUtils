@@ -2,7 +2,7 @@ package com.github.bhagatsingh.jhandyutils.jarchive;
 
 public interface JavaArchiveConstants {
    
-	public static final int BUFFER = 2048;
+	public static final int BUFFER_SIZE = 2048;
 	public static final int EOF_BLOCK = 1024;
     public static final int DATA_BLOCK = 512;
     public static final int HEADER_BLOCK = 512;
